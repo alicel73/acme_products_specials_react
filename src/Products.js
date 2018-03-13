@@ -8,12 +8,13 @@ class Products extends Component {
             name: '',
             isSpecial: false
         };
-        this.onSave = this.onSave.bind(this);
+        this.onSaveSpecial = this.onSaveSpecial.bind(this);
         this.makeSpecial = this.makeSpecial.bind(this);
+        this.onMakeRegular = this.onMakeRegular.bind(this);
     
     }
 
-    onSave(ev) {
+    onSaveSpecial(ev) {
         ev.preventDefault();
         this.props.makeSpec({
             id: this.state.id,
@@ -28,14 +29,20 @@ class Products extends Component {
         this.setState({ id: ev.target.value });
     }
 
+    onMakeRegular(ev) {
+        ev.preventDefault();
+        this.setState({ isSpecial: false});
+        this.setState({ id: ev.target.value });
+    }
+
     render() {
         const { name, isSpecial } = this.state;
         const { regularProducts, specialProducts } = this.props;
-        const { onSave, makeSpecial } = this;
+        const { onSaveSpecial, makeSpecial, onMakeRegular} = this;
         console.log(this);
         console.log(this.state);
         return (
-            <form onSubmit = { onSave }>
+            <form onSubmit = { onSaveSpecial }>
                 <h3> Regular Products </h3>
                 <select value = { name } onChange = { makeSpecial } >
                     <option value = ''>-- choose --</option>
@@ -54,7 +61,7 @@ class Products extends Component {
                 <br />
                 
                 <h3> Special Products </h3>
-                <select value = { name } >
+                <select value = { name } onChange = { onMakeRegular }>
                     <option value = ''>-- choose --</option>
                     {
                         specialProducts.map(product => {

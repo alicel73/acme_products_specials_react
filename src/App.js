@@ -13,6 +13,7 @@ class App extends Component {
 
         };
         this.makeSpec = this.makeSpec.bind(this);
+        this.makeRegular = this.makeRegular.bind(this);
     }
     
     componentDidMount() {
@@ -24,24 +25,38 @@ class App extends Component {
     }
 
     makeSpec(product) {
-        axios.put('/api/products/${product.id}', product)
+        axios.put(`/api/products/${product.id}`, product)
             .then (result => result.data)
             .then (product => {
                 let specProducts = this.state.specProducts;
+                let regProducts = this.state.regProducts;
                 specProducts = [...this.state.specProducts, product];
-                this.setState({ specProducts })
+                regProducts = regProducts.filter(treat =>treat.id !== product.id)
+                this.setState({ specProducts, regProducts })
             })
+    }
+
+    makeRegular(product) {
+        axios.put(`/api/products/${product.id}`, product)
+        .then (result => result.data)
+        .then (product => {
+            let specProducts = this.state.specProducts;
+            let regProducts = this.state.regProducts;
+            regProducts = [...this.state.regProducts, product];
+            specProducts = specProducts.filter(treat =>treat.id !== product.id)
+            this.setState({ specProducts, regProducts })
+        })
     }
 
     render() {
         const { regProducts, specProducts } = this.state;
-        const { makeSpec } = this;
+        const { makeSpec, makeRegular } = this;
 
         return (
             <Router>
                 <div>
                     <h2> We have {specProducts.length} special products! </h2>
-                    <Route path='/' exact render = { () => <Products regularProducts={ regProducts } specialProducts={ specProducts } makeSpec= { makeSpec } /> } />
+                    <Route path='/' exact render = { () => <Products regularProducts={ regProducts } specialProducts={ specProducts } makeSpec={ makeSpec } makeRegular={ makeRegular } /> } />
 
                 </div>
             </Router>

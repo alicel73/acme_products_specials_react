@@ -33,16 +33,6 @@ app.put('/api/products/:id', (req, res, next) => {
         .catch(next);
 })
 
-app.put('/api/things/:id', (req, res, next) => {
-    Thing.findById(req.params.id)
-        .then(thing=> {
-            Object.assign(thing, req.body);
-            return thing.save();
-        })
-        .then(thing => res.send(thing))
-        .catch(next);
-})
-
 app.get('/api/products', (req, res, next) => {
     let regProducts = [];
     let specProducts = [];
