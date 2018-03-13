@@ -24,18 +24,24 @@ app.use('/dist', express.static(path.join(__dirname, 'dist')));
 app.get('/', (req, res, next) => res.sendFile(path.join(__dirname, 'index.html')));
 
 app.put('/api/products/:id', (req, res, next) => {
-    Product.findById()
-        .then(product => { 
+    Product.findById(req.params.id)
+       .then(product => { 
            product.isSpecial = true;
-           product.save();
+           return product.save();
         })
-        .then(product => {
-            console.log('hello');
-            res.send(product);
-        })
+        .then(product => res.send(product))
         .catch(next);
 })
 
+app.put('/api/things/:id', (req, res, next) => {
+    Thing.findById(req.params.id)
+        .then(thing=> {
+            Object.assign(thing, req.body);
+            return thing.save();
+        })
+        .then(thing => res.send(thing))
+        .catch(next);
+})
 
 app.get('/api/products', (req, res, next) => {
     let regProducts = [];

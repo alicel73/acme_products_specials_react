@@ -4,27 +4,38 @@ class Products extends Component {
     constructor() {
         super();
         this.state = {
-            value: '',
+            id: 0,
             name: '',
             isSpecial: false
         };
+        this.onSave = this.onSave.bind(this);
         this.makeSpecial = this.makeSpecial.bind(this);
+    
+    }
 
+    onSave(ev) {
+        ev.preventDefault();
+        this.props.makeSpec({
+            id: this.state.id,
+            name: this.state.name,
+            isSpecial: this.state.isSpecial
+        })
     }
 
     makeSpecial(ev) {
-        this.setState({ isSpecial: true });
-        this.setState({ value: ev.target.value});
+        ev.preventDefault();
+        this.setState({ isSpecial: true});
+        this.setState({ id: ev.target.value });
     }
 
     render() {
         const { name, isSpecial } = this.state;
-        const { makeSpecial } = this;
         const { regularProducts, specialProducts } = this.props;
-        console.log(this)
-        console.log(this.state)
+        const { onSave, makeSpecial } = this;
+        console.log(this);
+        console.log(this.state);
         return (
-            <form>
+            <form onSubmit = { onSave }>
                 <h3> Regular Products </h3>
                 <select value = { name } onChange = { makeSpecial } >
                     <option value = ''>-- choose --</option>

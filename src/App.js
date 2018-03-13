@@ -12,6 +12,7 @@ class App extends Component {
             specProducts: []
 
         };
+        this.makeSpec = this.makeSpec.bind(this);
     }
     
     componentDidMount() {
@@ -22,18 +23,25 @@ class App extends Component {
             })
     }
 
-    makeSpecial(product) {
-        axios.post('/api/products/:id')
+    makeSpec(product) {
+        axios.put('/api/products/${product.id}', product)
+            .then (result => result.data)
+            .then (product => {
+                let specProducts = this.state.specProducts;
+                specProducts = [...this.state.specProducts, product];
+                this.setState({ specProducts })
+            })
     }
 
     render() {
         const { regProducts, specProducts } = this.state;
+        const { makeSpec } = this;
 
         return (
             <Router>
                 <div>
                     <h2> We have {specProducts.length} special products! </h2>
-                    <Route path='/' exact render = { () => <Products regularProducts={ regProducts } specialProducts={ specProducts } /> } />
+                    <Route path='/' exact render = { () => <Products regularProducts={ regProducts } specialProducts={ specProducts } makeSpec= { makeSpec } /> } />
 
                 </div>
             </Router>
